@@ -52,43 +52,11 @@ Cài đặt các thư viện cần thiết bằng lệnh:
 pip install -r requirements.txt
 ```
 
-### Bước 4: Khởi chạy ứng dụng Streamlit
+### Bước 4: Khởi chạy chương trình
 
-Khởi chạy ứng dụng Streamlit bằng lệnh:
+Khởi chạy chương trình bằng lệnh:
 
 ```bash
-streamlit run app.py
+python main.py
 ```
 
-Ngay sau khi chạy lệnh, trình duyệt web của bạn sẽ tự động mở một tab mới, thường ở địa chỉ:
-
-```text
-http://localhost:8501
-```
-
-Đây là giao diện của ứng dụng.
-
----
-
-## 🛠 Hướng dẫn Sử dụng (Workflow)
-
-### Bước 1: Khởi tạo
-
-Chọn dạng đồ thị và nhập số đỉnh của đồ thị bạn muốn phân tích.
-
-### Bước 2: Nối cạnh
-
-Lựa chọn đỉnh xuất phát `U` và đỉnh đến `V`.
-
-Bấm **Thêm Cạnh Vào Đồ Thị**. Bạn có thể quan sát bảng ma trận kề bên dưới tự động thay đổi các giá trị.
-
-### Bước 3: Phân tích
-
-Lựa chọn bài toán bạn muốn giải:
-
-- Chu trình Euler
-- Chu trình Hamilton
-
-Lựa chọn đỉnh bắt đầu. Nếu đồ thị của bạn vi phạm điều kiện, danh sách chọn đỉnh sẽ bị khóa lại và hiển thị cảnh báo để bạn bổ sung thêm cạnh.
-
-Bấm **Kết Xuất Kết Quả** để hệ thống tính toán và in ra lộ trình di chuyển chi tiết.
