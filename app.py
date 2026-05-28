@@ -4,7 +4,7 @@ import pandas as pd
 # Gọi các hàm thuật toán từ các tệp Python bên ngoài vào
 from euler import find_eulerian_cycle_undirected, find_eulerian_cycle_directed
 from hamilton import find_hamiltonian_cycle
-from tsp import held_karp_tsp
+from tsp import tsp
 
 # ==========================================
 # GIAO DIỆN STREAMLIT
@@ -174,7 +174,7 @@ else:
                 st.success(" ➔ ".join(map(str, result)))
                 
         elif cycle_type == "Bài toán Người giao hàng (TSP)":
-            cost, path = held_karp_tsp(st.session_state.adj_matrix, start_node)
+            cost, path = tsp(st.session_state.adj_matrix, start_node)
             if isinstance(cost, str):
                 st.error(cost)
             else:

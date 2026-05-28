@@ -7,7 +7,7 @@ from PyQt5.QtCore import *
 # Nhập các hàm thuật toán từ các tệp riêng biệt
 from euler import find_eulerian_cycle_undirected, find_eulerian_cycle_directed
 from hamilton import find_hamiltonian_cycle
-from tsp import held_karp_tsp
+from tsp import tsp
 
 # ==========================================
 # PHẦN 1: LỚP ĐỒ HỌA PYQT5 (NODES & EDGES)
@@ -424,7 +424,7 @@ class MainWindow(QWidget):
         
         elif algo == "Người giao hàng (TSP)":
             weighted_matrix = self.get_weighted_adjacency_matrix()
-            cost, path = held_karp_tsp(weighted_matrix, start_node)
+            cost, path = tsp(weighted_matrix, start_node)
             if isinstance(cost, str):
                 self.txt_result.setText(cost)
             else:

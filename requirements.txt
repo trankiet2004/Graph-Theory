@@ -1,4 +1,3 @@
 streamlit
-streamlit-flow-component
 pandas
 PyQt5

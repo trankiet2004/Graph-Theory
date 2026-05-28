@@ -1,50 +1,58 @@
-def held_karp_tsp(adj_matrix, start_vertex):
+def tsp(adj_matrix, start_vertex):
+    # Vẫn giữ nguyên tên hàm để không làm hỏng cấu trúc import ở các file khác
     n = len(adj_matrix)
-    memo = {}
 
+    # Kiểm tra đồ thị rỗng
     if sum(1 for row in adj_matrix for w in row if w > 0) == 0:
-        return "Đồ thị hiện chưa có cạnh nào.", [ ]
+        return "Đồ thị hiện chưa có cạnh nào.", []
 
-    def dp(mask, u):
-        if mask == (1 << n) - 1:
-            cost = adj_matrix[u][start_vertex]
-            return (cost, start_vertex) if cost > 0 else (float('inf'), start_vertex)
+    # Khởi tạo các biến lưu kết quả toàn cục cho hàm đệ quy
+    min_total_cost = float('inf')
+    best_path = []
+    
+    # Mảng đánh dấu các đỉnh đã thăm
+    visited = [False] * n
 
-        if (mask, u) in memo:
-            return memo[(mask, u)]
+    def backtrack(curr_vertex, visited_count, current_cost, path):
+        nonlocal min_total_cost, best_path
 
-        min_cost = float('inf')
-        best_next = -1
+        # Nhánh cận (Pruning): Cắt tỉa nếu chi phí hiện tại đã vượt mức tối ưu đang có
+        if current_cost >= min_total_cost:
+            return
 
-        for v in range(n):
-            if (mask & (1 << v)) == 0:
-                cost_to_v = adj_matrix[u][v]
-                if cost_to_v > 0:
-                    res_cost, _ = dp(mask | (1 << v), v)
-                    total_cost = cost_to_v + res_cost
-                    if total_cost < min_cost:
-                        min_cost = total_cost
-                        best_next = v
+        # Điều kiện dừng: Đã đi qua tất cả n đỉnh
+        if visited_count == n:
+            # Kiểm tra xem có đường từ đỉnh cuối quay về đỉnh xuất phát hay không
+            cost_to_start = adj_matrix[curr_vertex][start_vertex]
+            if cost_to_start > 0:
+                total_cost = current_cost + cost_to_start
+                if total_cost < min_total_cost:
+                    min_total_cost = total_cost
+                    best_path = path[:] + [start_vertex]
+            return
 
-        memo[(mask, u)] = (min_cost, best_next)
-        return memo[(mask, u)]
+        # Duyệt qua các đỉnh kề chưa được thăm
+        for next_vertex in range(n):
+            if not visited[next_vertex]:
+                edge_cost = adj_matrix[curr_vertex][next_vertex]
+                if edge_cost > 0:
+                    # Bước tiến: Đánh dấu đỉnh, cộng dồn chi phí và đưa vào đường đi
+                    visited[next_vertex] = True
+                    path.append(next_vertex)
 
-    min_total_cost, first_step = dp(1 << start_vertex, start_vertex)
+                    # Gọi đệ quy để đi tiếp
+                    backtrack(next_vertex, visited_count + 1, current_cost + edge_cost, path)
 
+                    # Bước quay lui (Backtrack): Phục hồi trạng thái để xét nhánh (đỉnh) khác
+                    path.pop()
+                    visited[next_vertex] = False
+
+    # Khởi tạo trạng thái cho đỉnh xuất phát ban đầu
+    visited[start_vertex] = True
+    backtrack(start_vertex, 1, 0, [start_vertex])
+
+    # Trả về kết quả theo đúng định dạng cũ
     if min_total_cost == float('inf'):
-        return "Không tồn tại chu trình Hamilton (TSP vô nghiệm trên đồ thị này).", [ ]
+        return "Không tồn tại chu trình Hamilton (TSP vô nghiệm trên đồ thị này).", []
 
-    path = [ start_vertex ]
-    mask = 1 << start_vertex
-    curr = start_vertex
-
-    while True:
-        _, nxt = memo.get((mask, curr), (None, start_vertex))
-        if nxt == start_vertex or nxt == -1:
-            path.append(start_vertex)
-            break
-        path.append(nxt)
-        mask |= (1 << nxt)
-        curr = nxt
-
-    return min_total_cost, path
+    return min_total_cost, best_path
