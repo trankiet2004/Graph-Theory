@@ -424,12 +424,24 @@ class MainWindow(QWidget):
         
         elif algo == "Người giao hàng (TSP)":
             weighted_matrix = self.get_weighted_adjacency_matrix()
-            cost, path = tsp(weighted_matrix, start_node)
+            cost, paths = tsp(weighted_matrix, start_node)
+            
+            # Xử lý trường hợp báo lỗi (vô nghiệm hoặc không có cạnh)
             if isinstance(cost, str):
                 self.txt_result.setText(cost)
             else:
-                self.txt_result.setText(f"Tổng trọng số (khoảng cách) ngắn nhất: {cost}\n\nLộ trình giao hàng tối ưu:\n" + " ➔ ".join(map(str, path)))
-
+                # Khởi tạo chuỗi kết quả ban đầu
+                result_text = f"Tổng trọng số (khoảng cách) ngắn nhất: {cost}\n\n"
+                result_text += f"Đã tìm thấy {len(paths)} lộ trình giao hàng tối ưu:\n"
+                
+                # Vòng lặp để xử lý và format từng lộ trình riêng biệt
+                for i, p in enumerate(paths):
+                    path_str = " ➔ ".join(map(str, p))
+                    result_text += f"Lộ trình {i + 1}: {path_str}\n"
+                
+                # Đẩy chuỗi kết quả cuối cùng lên giao diện
+                self.txt_result.setText(result_text)
+                
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
